@@ -28,8 +28,7 @@ export const parsePagesDir = (
   input: string,
   output: string,
   ignorePath: string | undefined,
-  pageExtensions = ['tsx', 'ts', 'jsx', 'js'],
-  appDirQueryLength: number
+  pageExtensions = ['tsx', 'ts', 'jsx', 'js']
 ): { imports: string[]; text: string } => {
   const ig = createIg(ignorePath)
   const regExpChunk = `\\.(${pageExtensions.join('|').replace(/\./g, '\\.')})$`
@@ -37,7 +36,7 @@ export const parsePagesDir = (
   const pageExtRegExp = new RegExp(regExpChunk)
   const imports: string[] = []
   const getImportName = (file: string) => {
-    const result = parseQueryFromTS(output, file, appDirQueryLength + imports.length)
+    const result = parseQueryFromTS(output, file, -1)
 
     if (result) {
       imports.push(result.importString)

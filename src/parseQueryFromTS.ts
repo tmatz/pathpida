@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import fs from 'fs'
 import path from 'path'
 
@@ -9,13 +10,19 @@ export const parseQueryFromTS = (output: string, file: string, suffix: number) =
 
   if (!typeName) return
 
-  const importName = `${typeName}${suffix}`
+  const importPath = path
+    .relative(output, file)
+    .replace(/\\/g, '/')
+    .replace(/(\/index)?\.tsx?$/, '')
+
+  const importName = `${typeName}${suffix !== -1 ? suffix : `_${hash(importPath)}`}`
 
   return {
     importName,
-    importString: `import type { ${typeName} as ${importName} } from '${path
-      .relative(output, file)
-      .replace(/\\/g, '/')
-      .replace(/(\/index)?\.tsx?$/, '')}'`
+    importString: `import type { ${typeName} as ${importName} } from '${importPath}'`
   }
+}
+
+function hash(str: string): string {
+  return crypto.createHash('sha1').update(str).digest('hex')
 }
