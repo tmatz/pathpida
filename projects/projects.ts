@@ -1,3 +1,5 @@
+import { SuffixMethod } from '../src/getConfig'
+
 export const projects = [
   { dir: 'nextjs', output: 'out/lib', nodeVer: 14 },
   { dir: 'nextjs-appdir', output: 'out/lib', nodeVer: 16 },
@@ -17,26 +19,44 @@ export const projects = [
     output: string | undefined
     enableStatic: boolean
     ignorePath: string | undefined
+    suffix: SuffixMethod
     nodeVer: number
   }[] => [
-    { ...project, output: undefined, enableStatic: true, ignorePath: undefined },
+    { ...project, output: undefined, enableStatic: true, ignorePath: undefined, suffix: 'number' },
     {
       ...project,
       output: `${project.output}/basic`,
       enableStatic: false,
-      ignorePath: '.pathpidaignore'
+      ignorePath: '.pathpidaignore',
+      suffix: 'number'
     },
     {
       ...project,
       output: `${project.output}/static`,
       enableStatic: true,
-      ignorePath: undefined
+      ignorePath: undefined,
+      suffix: 'number'
     },
     {
       ...project,
       output: `${project.output}/ignore`,
       enableStatic: true,
-      ignorePath: '.pathpidaignore'
+      ignorePath: '.pathpidaignore',
+      suffix: 'number'
+    },
+    {
+      ...project,
+      output: `${project.output}/path`,
+      enableStatic: false,
+      ignorePath: '.pathpidaignore',
+      suffix: 'path'
+    },
+    {
+      ...project,
+      output: `${project.output}/hash`,
+      enableStatic: false,
+      ignorePath: '.pathpidaignore',
+      suffix: 'hash'
     }
   ]
 )
