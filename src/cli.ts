@@ -4,13 +4,26 @@ import getConfig, { SuffixMethod } from './getConfig'
 import watch from './watchInputDir'
 import write from './writeRouteFile'
 
+const last = <T>(value: T | T[] | undefined): T | undefined => {
+  return value == null ? undefined : Array.isArray(value) ? value.slice(-1)[0] : value
+}
+
+const parseSuffix = (arg: any): SuffixMethod => {
+  const value = last<SuffixMethod>(arg)
+  const suffixes: SuffixMethod[] = ['number', 'path', 'hash']
+  if (value && !suffixes.includes(value)) {
+    console.error(`ERROR: unexpected value of --suffix option.`)
+    process.exit(1)
+  }
+  return value || 'number'
+}
+
 export const run = async (args: string[]) => {
   const argv = minimist(args, {
     string: ['version', 'watch', 'enableStatic', 'output', 'ignorePath', 'suffix'],
     alias: { v: 'version', w: 'watch', s: 'enableStatic', o: 'output', p: 'ignorePath' }
   })
-  const suffix: SuffixMethod =
-    argv.suffix === 'path' ? 'path' : argv.suffix === 'hash' ? 'hash' : 'number'
+  const suffix = parseSuffix(argv.suffix)
 
   argv.version !== undefined
     ? console.log(`v${require('../package.json').version}`)
