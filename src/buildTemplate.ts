@@ -19,6 +19,7 @@ export default (
     staticDir,
     output,
     ignorePath,
+    suffix,
     trailingSlash,
     basepath,
     pageExtensions,
@@ -33,10 +34,10 @@ export default (
 
     switch (type) {
       case 'nextjs':
-        text = createNextTemplate(input, output, ignorePath, appDir, pageExtensions)
+        text = createNextTemplate(input, output, ignorePath, suffix, appDir, pageExtensions)
         break
       case 'nuxtjs':
-        text = createNuxtTemplate(input, output, ignorePath, trailingSlash)
+        text = createNuxtTemplate(input, output, ignorePath, suffix, trailingSlash)
         break
     }
 
@@ -48,7 +49,7 @@ export default (
   }
 
   if (staticDir && mode !== 'pages') {
-    let text = createStaticTemplate(staticDir, basepath, ignorePath)
+    let text = createStaticTemplate(staticDir, basepath, ignorePath, suffix)
 
     while (emptyPathRegExp.test(text)) {
       text = text.replace(emptyPathRegExp, '')

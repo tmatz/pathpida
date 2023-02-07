@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { SuffixMethod } from '../getConfig'
 import { createIg, isIgnored } from '../isIgnored'
 import { parseQueryFromTS } from '../parseQueryFromTS'
 import { replaceWithUnderscore } from '../replaceWithUnderscore'
@@ -28,7 +29,9 @@ export const parsePagesDir = (
   input: string,
   output: string,
   ignorePath: string | undefined,
-  pageExtensions = ['tsx', 'ts', 'jsx', 'js']
+  pageExtensions = ['tsx', 'ts', 'jsx', 'js'],
+  suffix: SuffixMethod,
+  appDirQueryLength: number
 ): { imports: string[]; text: string } => {
   const ig = createIg(ignorePath)
   const regExpChunk = `\\.(${pageExtensions.join('|').replace(/\./g, '\\.')})$`
@@ -36,7 +39,7 @@ export const parsePagesDir = (
   const pageExtRegExp = new RegExp(regExpChunk)
   const imports: string[] = []
   const getImportName = (file: string) => {
-    const result = parseQueryFromTS(output, file, -1)
+    const result = parseQueryFromTS(output, file, suffix, appDirQueryLength + imports.length)
 
     if (result) {
       imports.push(result.importString)

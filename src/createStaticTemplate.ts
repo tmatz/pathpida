@@ -1,12 +1,14 @@
 import fs from 'fs'
 import path from 'path'
+import { SuffixMethod } from './getConfig'
 import { createIg, isIgnored } from './isIgnored'
 import { replaceWithUnderscore } from './replaceWithUnderscore'
 
 export const createStaticTemplate = (
   input: string,
   basepath: string | undefined,
-  ignorePath: string | undefined
+  ignorePath: string | undefined,
+  suffix: SuffixMethod
 ) => {
   const ig = createIg(ignorePath)
   const createPublicString = (targetDir: string, indent: string, url: string, text: string) => {

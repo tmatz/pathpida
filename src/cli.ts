@@ -1,14 +1,16 @@
 import minimist from 'minimist'
 import build from './buildTemplate'
-import getConfig from './getConfig'
+import getConfig, { SuffixMethod } from './getConfig'
 import watch from './watchInputDir'
 import write from './writeRouteFile'
 
 export const run = async (args: string[]) => {
   const argv = minimist(args, {
-    string: ['version', 'watch', 'enableStatic', 'output', 'ignorePath'],
+    string: ['version', 'watch', 'enableStatic', 'output', 'ignorePath', 'suffix'],
     alias: { v: 'version', w: 'watch', s: 'enableStatic', o: 'output', p: 'ignorePath' }
   })
+  const suffix: SuffixMethod =
+    argv.suffix === 'path' ? 'path' : argv.suffix === 'hash' ? 'hash' : 'number'
 
   argv.version !== undefined
     ? console.log(`v${require('../package.json').version}`)
@@ -17,7 +19,8 @@ export const run = async (args: string[]) => {
         const config = await getConfig(
           argv.enableStatic !== undefined,
           argv.output,
-          argv.ignorePath
+          argv.ignorePath,
+          suffix
         )
         write(build(config))
 
@@ -30,5 +33,9 @@ export const run = async (args: string[]) => {
 
         config.staticDir && watch(config.staticDir, () => write(build(config, 'static')))
       })()
-    : write(build(await getConfig(argv.enableStatic !== undefined, argv.output, argv.ignorePath)))
+    : write(
+        build(
+          await getConfig(argv.enableStatic !== undefined, argv.output, argv.ignorePath, suffix)
+        )
+      )
 }

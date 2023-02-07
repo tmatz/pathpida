@@ -2,6 +2,8 @@ import fs from 'fs'
 // import type { NextConfig } from 'next/dist/server/config'
 import path from 'path'
 
+export type SuffixMethod = 'number' | 'path' | 'hash'
+
 export type Config = (
   | { type: 'nextjs'; input: string | undefined; appDir?: { input: string } }
   | { type: 'nuxtjs'; input: string; appDir?: undefined }
@@ -9,6 +11,7 @@ export type Config = (
   staticDir: string | undefined
   output: string
   ignorePath: string | undefined
+  suffix: SuffixMethod
   trailingSlash?: boolean
   basepath?: string
   pageExtensions?: string[]
@@ -25,6 +28,7 @@ export default async (
   enableStatic: boolean,
   output: string | undefined,
   igPath: string | undefined,
+  suffix: SuffixMethod,
   dir = process.cwd()
 ): Promise<Config> => {
   const type = getFrameworkType(dir)
@@ -68,6 +72,7 @@ export default async (
       staticDir: enableStatic ? path.posix.join(dir, 'public') : undefined,
       output,
       ignorePath,
+      suffix,
       appDir: config.experimental?.appDir ? { input: path.posix.join(srcDir, 'app') } : undefined,
       pageExtensions: config.pageExtensions,
       basepath: config.basePath
@@ -90,6 +95,7 @@ export default async (
       staticDir: enableStatic ? path.posix.join(srcDir, 'static') : undefined,
       output,
       ignorePath,
+      suffix,
       trailingSlash: config.router?.trailingSlash,
       basepath: config.router?.base
     }

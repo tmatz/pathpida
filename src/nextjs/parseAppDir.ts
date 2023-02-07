@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { SuffixMethod } from '../getConfig'
 import { createIg, isIgnored } from '../isIgnored'
 import { parseQueryFromTS } from '../parseQueryFromTS'
 import { replaceWithUnderscore } from '../replaceWithUnderscore'
@@ -8,13 +9,14 @@ import { createMethods, Slugs } from './parsePagesDir'
 export const parseAppDir = (
   input: string,
   output: string,
-  ignorePath: string | undefined
+  ignorePath: string | undefined,
+  suffix: SuffixMethod
 ): { imports: string[]; text: string } => {
   const ig = createIg(ignorePath)
   const pageFileNames = ['page.tsx', 'page.jsx', 'page.js']
   const imports: string[] = []
   const getImportName = (file: string) => {
-    const result = parseQueryFromTS(output, file, -1)
+    const result = parseQueryFromTS(output, file, suffix, imports.length)
 
     if (result) {
       imports.push(result.importString)

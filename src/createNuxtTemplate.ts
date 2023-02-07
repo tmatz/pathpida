@@ -1,6 +1,9 @@
 import fs from 'fs'
 import path from 'path'
+import { SuffixMethod } from './getConfig'
+import { getImportPath } from './getImportPath'
 import { createIg, isIgnored } from './isIgnored'
+import { makeSuffix } from './makeSuffix'
 import { parseQueryFromTS } from './parseQueryFromTS'
 import { replaceWithUnderscore } from './replaceWithUnderscore'
 
@@ -18,7 +21,7 @@ const createMethods = (
     importName ? `, query: url${importName.startsWith('Query') ? '' : '?'}.query as any` : ''
   }, hash: url${importName?.startsWith('Query') ? '' : '?'}.hash })`
 
-const parseQueryFromVue = (file: string, suffix: number) => {
+const parseQueryFromVue = (output: string, file: string, suffix: SuffixMethod, index: number) => {
   const fileData = fs.readFileSync(file, 'utf8')
   const typeName = ['Query', 'OptionalQuery'].find(type =>
     new RegExp(`export (interface ${type} ?{|type ${type} ?= ?{)`).test(fileData)
@@ -42,7 +45,7 @@ const parseQueryFromVue = (file: string, suffix: number) => {
     cursor += 1
   }
 
-  const importName = `${typeName}${suffix}`
+  const importName = `${typeName}${makeSuffix(suffix, index, getImportPath(output, file))}`
 
   return {
     importName,
@@ -56,14 +59,15 @@ export const createNuxtTemplate = (
   input: string,
   output: string,
   ignorePath: string | undefined,
+  suffix: SuffixMethod,
   trailingSlash = false
 ) => {
   const ig = createIg(ignorePath)
   const imports: string[] = []
   const getImportName = (file: string) => {
     const result = path.extname(file).startsWith('.ts')
-      ? parseQueryFromTS(output, file, imports.length)
-      : parseQueryFromVue(file, imports.length)
+      ? parseQueryFromTS(output, file, suffix, imports.length)
+      : parseQueryFromVue(output, file, suffix, imports.length)
 
     if (result) {
       imports.push(result.importString)
