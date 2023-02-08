@@ -1,0 +1,1 @@
+{"version":3,"file":"replaceWithUnderscore.js","sourceRoot":"","sources":["../src/replaceWithUnderscore.ts"],"names":[],"mappings":";;;AAAO,IAAM,qBAAqB,GAAG,UAAC,IAAY;IAChD,OAAA,IAAI,CAAC,OAAO,CAAC,wBAAwB,EAAE,GAAG,CAAC,CAAC,OAAO,CAAC,OAAO,EAAE,MAAM,CAAC;AAApE,CAAoE,CAAA;AADzD,QAAA,qBAAqB,yBACoC"}

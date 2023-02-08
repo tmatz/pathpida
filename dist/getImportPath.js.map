@@ -1,0 +1,1 @@
+{"version":3,"file":"getImportPath.js","sourceRoot":"","sources":["../src/getImportPath.ts"],"names":[],"mappings":";;;;;;AAAA,8CAAuB;AAEvB,SAAgB,aAAa,CAAC,IAAY,EAAE,EAAU;IACpD,OAAO,cAAI;SACR,QAAQ,CAAC,IAAI,EAAE,EAAE,CAAC;SAClB,OAAO,CAAC,KAAK,EAAE,GAAG,CAAC;SACnB,OAAO,CAAC,4BAA4B,EAAE,EAAE,CAAC,CAAA;AAC9C,CAAC;AALD,sCAKC"}
